@@ -19,7 +19,16 @@ public class SimpleCompiler {
         Scanner mScanner = new Scanner();
         mScanner.setInputCodeString(inputCode);
 
+        System.out.println("Start reading tokens");
 
+        Token mToken = mScanner.getToken();
+
+        while ( mToken.getTokenName() != Token.TokenName.T_EOF) {
+            System.out.println(mToken.toString());
+            mToken = mScanner.getToken();
+        }
+
+        System.out.println("End reading tokens");
 
 
     }
