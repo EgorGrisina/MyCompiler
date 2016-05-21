@@ -53,10 +53,9 @@ public class InputFileReader {
 
     private String clearString(String string) {
 
-        string = string.replace(" ", "");
-        string = string.replace("\n", "");
-        string = string.replace("\t", "");
-        string = string.replace("\r", "");
+        string = string.replace("\n", " ");
+        string = string.replace("\t", " ");
+        string = string.replace("\r", " ");
 
         return string;
     }
