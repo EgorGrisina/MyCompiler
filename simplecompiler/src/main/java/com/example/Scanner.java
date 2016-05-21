@@ -5,6 +5,7 @@ public class Scanner {
     private String inputCodeString;
     private int inputCharsPosition;
     private char ch_;
+    private int lineCount;
 
     public Scanner() {
     }
@@ -12,6 +13,7 @@ public class Scanner {
     public void setInputCodeString(String input) {
         inputCodeString = input;
         inputCharsPosition = 0;
+        lineCount = 1;
         nextChar();
     }
 
@@ -29,7 +31,7 @@ public class Scanner {
         skipSpace();
 
         Token mToken = new Token();
-
+        mToken.setLineNumber(lineCount);
         //изначально все лексемы считаем неизвестными
         mToken.setTokenName(Token.TokenName.T_ILLEGAL);
 
@@ -49,7 +51,10 @@ public class Scanner {
                 nextChar();
                 boolean inside = true;
                 while (inside) {
-                    while (ch_ != '*' || ch_ != 0) {
+                    while (ch_ != '*') {
+                        if (ch_ == 0) {
+                            return mToken;
+                        }
                         nextChar();
                     }
 
@@ -72,6 +77,8 @@ public class Scanner {
                 return mToken;
             }
         }
+
+        mToken.setLineNumber(lineCount);
 
         //Если встретили цифру, то до тех пока дальше идут цифры - считаем как продолжение числа.
         //Запоминаем полученное целое, а за лексему считаем целочисленный литерал
@@ -102,17 +109,14 @@ public class Scanner {
             for (Token.KeyWords keyWord : Token.KeyWords.values()) {
 
                 if (buffer.equals(keyWord.name())) {
-
                     mToken.setTokenName(getTokenName(keyWord));
-                    return mToken;
-
-                } else {
-
-                    mToken.setTokenName(Token.TokenName.T_VAR);
-                    mToken.setStringVal(buffer);
                     return mToken;
                 }
             }
+
+            mToken.setTokenName(Token.TokenName.T_VAR);
+            mToken.setStringVal(buffer);
+            return mToken;
         }
 
         //Символ не является буквой, цифрой, "/" или признаком конца файла
@@ -257,8 +261,15 @@ public class Scanner {
     }
 
     public void skipSpace() {
+
         while (ch_ == ' ') {
             nextChar();
+        }
+
+        if (ch_ == '\n') {
+            lineCount++;
+            nextChar();
+            skipSpace();
         }
     }
 

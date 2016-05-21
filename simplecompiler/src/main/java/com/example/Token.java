@@ -36,6 +36,15 @@ public class Token {
     private Integer intVal = null;
     private String stringVal = null;
     private TokenName tokenName = null;
+    private int lineNumber = 0;
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    public void setLineNumber(int lineNumber) {
+        this.lineNumber = lineNumber;
+    }
 
     public int getIntVal() {
         return intVal;
@@ -69,6 +78,7 @@ public class Token {
         } else if (intVal != null) {
             string+="("+intVal+")";
         }
+        string+="[line:"+lineNumber+"]";
         return string;
     }
 }

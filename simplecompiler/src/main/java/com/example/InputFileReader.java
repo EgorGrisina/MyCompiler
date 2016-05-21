@@ -35,7 +35,7 @@ public class InputFileReader {
             while ( (buffer = buffered_reader.readLine()) != null) {
 
                 if (!buffer.equals("")) {
-                    buffer = clearString(buffer);
+                    buffer = clearString(buffer)+"\n";
                     inputCode += buffer;
                 }
             }
@@ -53,7 +53,6 @@ public class InputFileReader {
 
     private String clearString(String string) {
 
-        string = string.replace("\n", " ");
         string = string.replace("\t", " ");
         string = string.replace("\r", " ");
 
