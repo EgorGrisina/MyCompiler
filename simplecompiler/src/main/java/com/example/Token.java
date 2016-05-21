@@ -6,7 +6,7 @@ public class Token {
         T_EOF,			// Конец текстового потока
         T_ILLEGAL,		// Признак недопустимого символа
         T_VAR,   		// Переменная
-        T_NUMBER,		// Целочисленный литерал
+        T_INT,		// Целочисленный литерал
         T_BEGIN,		// Ключевое слово "begin"
         T_END,			// Ключевое слово "end"
         T_IF,			// Ключевое слово "if"
@@ -14,8 +14,6 @@ public class Token {
         T_ELSE,			// Ключевое слово "else"
         T_FI,			// Ключевое слово "fi"
         T_WHILE,		// Ключевое слово "while"
-        T_DO,			// Ключевое слово "do"
-        T_OD,			// Ключевое слово "od"
         T_ASSIGN,		// Оператор "="
         T_ADDOP,		// Сводная лексема для "+" и "-" (операция типа сложения)
         T_MULOP,		// Сводная лексема для "*" и "/" (операция типа умножения)
@@ -25,9 +23,19 @@ public class Token {
         T_SEMICOLON,	// ";"
     }
 
-    private int intVal;
-    private String stringVal;
-    private TokenName tokenName;
+    public enum KeyWords {
+        WHILE,
+        BEGIN,
+        END,
+        ELSE,
+        THEN,
+        FI,
+        IF
+    }
+
+    private Integer intVal = null;
+    private String stringVal = null;
+    private TokenName tokenName = null;
 
     public int getIntVal() {
         return intVal;
@@ -51,5 +59,16 @@ public class Token {
 
     public void setTokenName(TokenName tokenName) {
         this.tokenName = tokenName;
+    }
+
+
+    public String toString(){
+        String string = tokenName.name();
+        if (stringVal != null) {
+            string+="("+stringVal+")";
+        } else if (intVal != null) {
+            string+="("+intVal+")";
+        }
+        return string;
     }
 }
