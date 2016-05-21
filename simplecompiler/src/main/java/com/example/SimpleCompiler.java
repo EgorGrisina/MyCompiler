@@ -8,37 +8,18 @@ import java.io.InputStreamReader;
 
 public class SimpleCompiler {
 
+    final static String INPUT_FILE_NAME = "files/input.txt";
+
     public static void main(String[] args) {
         System.out.println("Start MyCompiler");
 
-        System.out.println("Reading input file");
+        InputFileReader mInputFileReader = new InputFileReader(INPUT_FILE_NAME);
+        String inputCode = mInputFileReader.readFile();
 
-        String inputCode = "";
-        String buffer = "";
-        FileInputStream stream = null;
-        try {
-            stream = new FileInputStream("input.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("Can't open input file");
-            return;
-        }
-        InputStreamReader reader = new InputStreamReader( stream );
-        BufferedReader buffered_reader = new BufferedReader( reader );
+        Scanner mScanner = new Scanner();
+        mScanner.setInputCodeString(inputCode);
 
-        try {
-            while ( (buffer = buffered_reader.readLine()) != null) {
-                buffer.replace(" ",""); // replacing spaces
-                inputCode += buffer;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error while reading input file");
-            return;
-        }
 
-        System.out.println("File reading completed");
-        System.out.println(inputCode);
 
 
     }
