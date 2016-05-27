@@ -6,6 +6,7 @@ public class Scanner {
     private int inputCharsPosition;
     private char ch_;
     private int lineCount;
+    private Token currentToken = null;
 
     public Scanner() {
     }
@@ -26,7 +27,16 @@ public class Scanner {
         }
     }
 
+    public void nextToken() {
+        currentToken = getNewToken();
+        //System.out.println("Scanner: currentToken: "+currentToken.getTokenName().toString());
+    }
+
     public Token getToken() {
+        return currentToken;
+    }
+
+    private Token getNewToken() {
 
         skipSpace();
 

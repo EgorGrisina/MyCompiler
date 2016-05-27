@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 
 public class SimpleCompiler {
 
-    final static String INPUT_FILE_NAME = "files/input.txt";
+    final static String INPUT_FILE_NAME = "files/inputArithmetic.txt";
 
     public static void main(String[] args) {
         System.out.println("Start MyCompiler");
@@ -19,16 +19,10 @@ public class SimpleCompiler {
         Scanner mScanner = new Scanner();
         mScanner.setInputCodeString(inputCode);
 
-        System.out.println("Start reading tokens");
-
-        Token mToken = mScanner.getToken();
-
-        while ( mToken.getTokenName() != Token.TokenName.T_EOF) {
-            System.out.println(mToken.toString());
-            mToken = mScanner.getToken();
-        }
-
-        System.out.println("End reading tokens");
+        Parser mParser = new Parser(mScanner);
+        System.out.println("Start parsing");
+        mParser.parse();
+        System.out.println("End parsing");
 
 
     }
