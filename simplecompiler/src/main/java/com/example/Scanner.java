@@ -26,12 +26,12 @@ public class Scanner {
             ch_ = 0;
         }
     }
-
+    //передвинуться на следующую лексему
     public void nextToken() {
         currentToken = getNewToken();
         //System.out.println("Scanner: currentToken: "+currentToken.getTokenName().toString());
     }
-
+    //получить текущую лексему
     public Token getToken() {
         return currentToken;
     }

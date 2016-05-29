@@ -13,7 +13,7 @@ public class Parser {
         next();
         program();
         if (!isError) {
-            //end of code generation;
+            //TODO end of code generation;
         } else {
             System.out.println("End of Parsing with error!");
         }
@@ -23,7 +23,7 @@ public class Parser {
         mustBe(Token.TokenName.T_BEGIN);
         statementList();
         mustBe(Token.TokenName.T_END);
-        // generateCode;
+        //TODO generateCode;
     }
 
     // Разбор списка операторов.
@@ -51,6 +51,7 @@ public class Parser {
             expression();
             //TODO generate code
         }
+
     }
 
     //разбор арифметического выражения.

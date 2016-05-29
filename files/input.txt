@@ -1,13 +1,4 @@
 BEGIN
 	Y = 2;
-	X = Y+11;
-	Y = Y / 2;
-	WHILE (X < 11120) BEGIN
-		Y = X*28;
-		X = Y;
-		
-		
-		
-	END
-	
+	X = Y+11;	
 END
