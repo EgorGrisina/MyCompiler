@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 
 public class SimpleCompiler {
 
-    final static String INPUT_FILE_NAME = "files/inputArithmetic.txt";
+    final static String INPUT_FILE_NAME = "files/inputIFWHILE.txt";
 
     public static void main(String[] args) {
         System.out.println("Start MyCompiler");

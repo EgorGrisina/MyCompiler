@@ -157,7 +157,6 @@ public class Scanner {
 
                 } else {
                     mToken.setTokenName(Token.TokenName.T_ASSIGN);
-                    nextChar();
                 }
                 break;
             //Если встретили символ "<", то либо следующий символ "=", тогда лексема нестрогого сравнения. Иначе - строгого.

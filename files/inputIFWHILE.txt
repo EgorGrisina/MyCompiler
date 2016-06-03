@@ -1,0 +1,17 @@
+BEGIN
+	Y = 2;
+	
+	WHILE (Y>0) BEGIN
+		Y = Y-1;
+		X = X+Y;
+		
+		IF (X<=0) THEN
+		
+			X = Y+11;
+			Y = Y / 2;
+		ELSE
+			Y=2;
+		FI
+	END
+	
+END

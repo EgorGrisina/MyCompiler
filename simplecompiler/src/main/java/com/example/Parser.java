@@ -34,7 +34,6 @@ public class Parser {
             boolean more = !(see(Token.TokenName.T_END) || see(Token.TokenName.T_ELSE) || see(Token.TokenName.T_FI));
             while(more) {
                 statement();
-                mustBe(Token.TokenName.T_SEMICOLON);
                 more = !(see(Token.TokenName.T_END) || see(Token.TokenName.T_ELSE) || see(Token.TokenName.T_FI));
             }
     }
@@ -45,10 +44,44 @@ public class Parser {
         // Следующей лексемой должно быть присваивание. Затем идет блок expression, который возвращает значение на вершину стека.
         // Записываем это значение по адресу нашей переменной
         if (see(Token.TokenName.T_VAR)) {
+
             //int varAddr = findAdd(mScanner.getToken().getStringVal());
             next();
             mustBe(Token.TokenName.T_ASSIGN);
             expression();
+            mustBe(Token.TokenName.T_SEMICOLON);
+            //TODO generate code
+
+        } else if (see(Token.TokenName.T_IF)) {
+            // Если встретили IF, то затем должно следовать условие.
+            next();
+            mustBe(Token.TokenName.T_LPAREN);
+            relation();
+            //TODO generate code
+            mustBe(Token.TokenName.T_RPAREN);
+            mustBe(Token.TokenName.T_THEN);
+            statementList();
+            if (match(Token.TokenName.T_ELSE)) {
+                //TODO generate code
+                statementList();
+                //TODO generate code
+            } else {
+                //TODO generate code
+            }
+            mustBe(Token.TokenName.T_FI);
+
+        } else if (see(Token.TokenName.T_WHILE)) {
+
+            next();
+            mustBe(Token.TokenName.T_LPAREN);
+            relation();
+            //TODO generate code
+            mustBe(Token.TokenName.T_RPAREN);
+
+            mustBe(Token.TokenName.T_BEGIN);
+            statementList();
+            //TODO generate code
+            mustBe(Token.TokenName.T_END);
             //TODO generate code
         }
 
@@ -130,12 +163,27 @@ public class Parser {
             //закрывающая скобка.
         }
         else {
-            System.out.println("expression expected.");
+            System.out.println("Error on line: "+mScanner.getToken().getLineNumber()+" expression expected.");
+            isError = true;
         }
     }
 
     //разбор условия.
     void relation() {
+        //Условие сравнивает два выражения по какому-либо из знаков. Каждый знак имеет свой номер. В зависимости от
+        //результата сравнения на вершине стека окажется 0 или 1.
+        expression();
+        if (see(Token.TokenName.T_CMP)) {
+            String cmp = mScanner.getToken().getStringVal();
+            next();
+            expression();
+            switch (cmp) {
+              //TODO generate code
+            }
+        } else {
+            System.out.println("Error on line: "+mScanner.getToken().getLineNumber()+" comparison operator expected.");
+            isError = true;
+        }
 
     }
 
