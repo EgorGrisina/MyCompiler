@@ -31,10 +31,12 @@ public class Parser {
         //	  Если список операторов пуст, очередной лексемой будет одна из возможных "закрывающих скобок": END, ELSE, FI.
         //	  Если очередная лексема не входит в этот список, то ее мы считаем началом оператора и вызываем метод statement.
         //    Признаком последнего оператора является отсутствие после оператора точки с запятой.
-            boolean more = !(see(Token.TokenName.T_END) || see(Token.TokenName.T_ELSE) || see(Token.TokenName.T_FI));
+            boolean more = !(see(Token.TokenName.T_END) || see(Token.TokenName.T_ELSE)
+                    || see(Token.TokenName.T_FI) || see(Token.TokenName.T_EOF));
             while(more) {
                 statement();
-                more = !(see(Token.TokenName.T_END) || see(Token.TokenName.T_ELSE) || see(Token.TokenName.T_FI));
+                more = !(see(Token.TokenName.T_END) || see(Token.TokenName.T_ELSE)
+                        || see(Token.TokenName.T_FI) || see(Token.TokenName.T_EOF));
             }
     }
 
