@@ -83,7 +83,6 @@ public class Scanner {
             } else {
                 mToken.setTokenName(Token.TokenName.T_MULOP);
                 mToken.setStringVal("/");
-                nextChar();
                 return mToken;
             }
         }
