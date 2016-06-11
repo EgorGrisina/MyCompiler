@@ -147,16 +147,19 @@ public class Scanner {
                 break;
             //Если встречаем "=", то дальше смотрим наличие символа "=". Если находим, то считаем что нашли лексему сравнения "=="
             //инчае лексема присваивания "="
-            case '=':
+            case ':':
                 nextChar();
                 if (ch_ == '=') {
-                    mToken.setTokenName(Token.TokenName.T_CMP);
-                    mToken.setStringVal("==");
-                    nextChar();
-
-                } else {
                     mToken.setTokenName(Token.TokenName.T_ASSIGN);
+                    nextChar();
+                } else {
+                    mToken.setTokenName(Token.TokenName.T_COLON);
                 }
+                break;
+            case '=':
+                mToken.setTokenName(Token.TokenName.T_CMP);
+                mToken.setStringVal("=");
+                nextChar();
                 break;
             //Если встретили символ "<", то либо следующий символ "=", тогда лексема нестрогого сравнения. Иначе - строгого.
             case '<':
@@ -211,7 +214,10 @@ public class Scanner {
                 mToken.setStringVal("*");
                 nextChar();
                 break;
-            //Иначе лексема ошибки.
+            case '.':
+                mToken.setTokenName(Token.TokenName.T_POINT);
+                break;
+                //Иначе лексема ошибки.
             default:
                 mToken.setTokenName(Token.TokenName.T_ILLEGAL);
                 nextChar();
@@ -262,6 +268,19 @@ public class Scanner {
         } else if (keyWord == Token.KeyWords.FI) {
 
             return (Token.TokenName.T_FI);
+
+        } else if (keyWord == Token.KeyWords.PROGRAM) {
+
+            return (Token.TokenName.T_PROGRAM);
+
+        } else if (keyWord == Token.KeyWords.VAR) {
+
+            return (Token.TokenName.T_VARIABLES);
+
+        } else if (keyWord == Token.KeyWords.Integer) {
+
+            return (Token.TokenName.T_INT);
+
         }
 
         return Token.TokenName.T_ILLEGAL;

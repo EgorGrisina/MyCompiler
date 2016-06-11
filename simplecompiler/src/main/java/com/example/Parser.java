@@ -21,10 +21,30 @@ public class Parser {
     }
 
     private void program(){
+        mustBe(Token.TokenName.T_PROGRAM);
+        mustBe(Token.TokenName.T_VAR);
+        mustBe(Token.TokenName.T_SEMICOLON);
+
+        if (see(Token.TokenName.T_VARIABLES)) {
+            next();
+            varlist();
+        }
+
         mustBe(Token.TokenName.T_BEGIN);
         statementList();
         mustBe(Token.TokenName.T_END);
+        mustBe(Token.TokenName.T_POINT);
         mGenerator.emit(Generator.Instruction.END, "start");
+    }
+
+    private void varlist() {
+        while (see(Token.TokenName.T_VAR)) {
+            mGenerator.addVariable(mScanner.getToken().getStringVal());
+            next();
+            mustBe(Token.TokenName.T_COLON);
+            mustBe(Token.TokenName.T_INT);
+            mustBe(Token.TokenName.T_SEMICOLON);
+        }
     }
 
     // Разбор списка операторов.
@@ -48,8 +68,13 @@ public class Parser {
         // Записываем это значение по адресу нашей переменной
         if (see(Token.TokenName.T_VAR)) {
 
-            String varAddr = mGenerator.findOrAddVariable(
+            String varAddr = mGenerator.findVariable(
                     mScanner.getToken().getStringVal());
+            if (varAddr == null) {
+                isError = true;
+                System.out.println("Error on line " + mScanner.getToken().getLineNumber()
+                + " undefined symbol: " +mScanner.getToken().getStringVal());
+            }
             next();
             mustBe(Token.TokenName.T_ASSIGN);
             expression();
@@ -162,7 +187,12 @@ public class Parser {
             //Если встретили число, то преобразуем его в целое и записываем на вершину стека
         }
         else if(see(Token.TokenName.T_VAR)) {
-            String varAddress = mGenerator.findOrAddVariable(mScanner.getToken().getStringVal());
+            String varAddress = mGenerator.findVariable(mScanner.getToken().getStringVal());
+            if (varAddress == null) {
+                isError = true;
+                System.out.println("Error on line " + mScanner.getToken().getLineNumber()
+                        + " undefined symbol: " +mScanner.getToken().getStringVal());
+            }
             next();
             mGenerator.emit(Generator.Instruction.LOAD, String.valueOf(varAddress));
             //Если встретили переменную, то выгружаем значение, лежащее по ее адресу, на вершину стека
@@ -195,7 +225,7 @@ public class Parser {
             next();
             expression();
 
-            if (cmp.equals("==")) {
+            if (cmp.equals("=")) {
                 mGenerator.emit(Generator.Instruction.CMP, "0");
             } else if (cmp.equals("!=")) {
                 mGenerator.emit(Generator.Instruction.CMP, "1");

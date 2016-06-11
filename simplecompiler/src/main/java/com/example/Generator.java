@@ -61,7 +61,7 @@ public class Generator {
         return result;
     }
 
-    public String findOrAddVariable(String varName) {
+    public String addVariable(String varName) {
 
         for (int i = 0; i < variables.size(); i++) {
             if (variables.get(i).equals(varName)) {
@@ -70,6 +70,16 @@ public class Generator {
         }
         variables.add(varName);
         return varName;
+    }
+
+    public String findVariable(String varName) {
+
+        for (int i = 0; i < variables.size(); i++) {
+            if (variables.get(i).equals(varName)) {
+                return varName;
+            }
+        }
+        return null;
     }
 
     public enum Instruction{

@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 public class SimpleCompiler {
 
     final static String INPUT_FILE_NAME = "files/inputIFWHILE.txt";
+    final static String OUTPUT_FILE_NAME = "files/outputASM.txt";
 
     public static void main(String[] args) {
         System.out.println("Start MyCompiler");
@@ -27,7 +28,8 @@ public class SimpleCompiler {
         System.out.println("End parsing");
 
         if (done) {
-            System.out.println(mGenerator.getAssemblerCode());
+            mInputFileReader.saveFile(mGenerator.getAssemblerCode(), OUTPUT_FILE_NAME);
+            System.out.println("Generated code saved to file: "+OUTPUT_FILE_NAME);
         }
 
 

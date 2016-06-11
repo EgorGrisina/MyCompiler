@@ -1,0 +1,37 @@
+ 	 .data 
+Y	word	?
+X	word	?
+;
+	.code
+start:
+	push 2
+	store Y
+	load Y
+	push 0
+	cmp 3
+	jump_no 30
+	load Y
+	push 1
+	sub
+	store Y
+	load X
+	load Y
+	add
+	store X
+	load X
+	push 0
+	cmp 4
+	jump_no 27
+	load Y
+	push 11
+	add
+	store X
+	load Y
+	push 2
+	div
+	store Y
+	jump 29
+	push 2
+	store Y
+	jump 2
+end start

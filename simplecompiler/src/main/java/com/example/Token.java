@@ -14,13 +14,17 @@ public class Token {
         T_ELSE,			// Ключевое слово "else"
         T_FI,			// Ключевое слово "fi"
         T_WHILE,		// Ключевое слово "while"
-        T_ASSIGN,		// Оператор "="
+        T_ASSIGN,		// Оператор ":="
         T_ADDOP,		// Сводная лексема для "+" и "-" (операция типа сложения)
         T_MULOP,		// Сводная лексема для "*" и "/" (операция типа умножения)
         T_CMP,			// Сводная лексема для операторов отношения
         T_LPAREN,		// Открывающая скобка
         T_RPAREN,		// Закрывающая скобка
         T_SEMICOLON,	// ";"
+        T_COLON,	    // ";"
+        T_PROGRAM,
+        T_VARIABLES,
+        T_POINT
     }
 
     public enum KeyWords {
@@ -30,7 +34,10 @@ public class Token {
         ELSE,
         THEN,
         FI,
-        IF
+        IF,
+        PROGRAM,
+        Integer,
+        VAR
     }
 
     private Integer intVal = null;
