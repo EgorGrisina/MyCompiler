@@ -1,4 +1,0 @@
-BEGIN
-	Y = 2;
-	X = Y+11;	
-END
