@@ -3,27 +3,28 @@ package com.example;
 public class Parser {
 
     private Scanner mScanner;
+    private Generator mGenerator;
     private boolean isError = false;
 
-    public Parser(Scanner scanner) {
+    public Parser(Scanner scanner, Generator generator) {
         mScanner = scanner;
+        mGenerator = generator;
     }
 
-    public void parse(){
+    public boolean parse(){
         next();
         program();
-        if (!isError) {
-            //TODO end of code generation;
-        } else {
+        if (isError) {
             System.out.println("End of Parsing with error!");
         }
+        return !isError;
     }
 
     private void program(){
         mustBe(Token.TokenName.T_BEGIN);
         statementList();
         mustBe(Token.TokenName.T_END);
-        //TODO generateCode;
+        mGenerator.emit(Generator.Instruction.END, "start");
     }
 
     // Разбор списка операторов.
@@ -47,44 +48,58 @@ public class Parser {
         // Записываем это значение по адресу нашей переменной
         if (see(Token.TokenName.T_VAR)) {
 
-            //int varAddr = findAdd(mScanner.getToken().getStringVal());
+            String varAddr = mGenerator.findOrAddVariable(
+                    mScanner.getToken().getStringVal());
             next();
             mustBe(Token.TokenName.T_ASSIGN);
             expression();
             mustBe(Token.TokenName.T_SEMICOLON);
-            //TODO generate code
+            mGenerator.emit(Generator.Instruction.STORE, String.valueOf(varAddr));
 
         } else if (see(Token.TokenName.T_IF)) {
             // Если встретили IF, то затем должно следовать условие.
             next();
             mustBe(Token.TokenName.T_LPAREN);
             relation();
-            //TODO generate code
+            int jumpNoAddress = mGenerator.reserve();
             mustBe(Token.TokenName.T_RPAREN);
+
             mustBe(Token.TokenName.T_THEN);
             statementList();
             if (match(Token.TokenName.T_ELSE)) {
-                //TODO generate code
+                int jumpAddress = mGenerator.reserve();
+                mGenerator.emitAt(jumpNoAddress, Generator.Instruction.JUMP_NO,
+                        String.valueOf(mGenerator.getCurrentAddress()));
                 statementList();
-                //TODO generate code
+                mGenerator.emitAt(jumpAddress, Generator.Instruction.JUMP,
+                        String.valueOf(mGenerator.getCurrentAddress()));
+
             } else {
-                //TODO generate code
+                mGenerator.emitAt(jumpNoAddress, Generator.Instruction.JUMP_NO,
+                        String.valueOf(mGenerator.getCurrentAddress()));
             }
             mustBe(Token.TokenName.T_FI);
 
         } else if (see(Token.TokenName.T_WHILE)) {
+            //запоминаем адрес начала проверки условия.
+            int conditionAddress = mGenerator.getCurrentAddress();
 
             next();
             mustBe(Token.TokenName.T_LPAREN);
             relation();
-            //TODO generate code
+            //резервируем место под инструкцию условного перехода для выхода из цикла.
+            int jumpNoAddress = mGenerator.reserve();
             mustBe(Token.TokenName.T_RPAREN);
 
             mustBe(Token.TokenName.T_BEGIN);
             statementList();
-            //TODO generate code
             mustBe(Token.TokenName.T_END);
-            //TODO generate code
+            //переходим по адресу проверки условия
+            mGenerator.emit(Generator.Instruction.JUMP, String.valueOf(conditionAddress));
+            //заполняем зарезервированный адрес инструкцией условного перехода на следующий за циклом оператор.
+            mGenerator.emitAt(jumpNoAddress, Generator.Instruction.JUMP_NO,
+                    String.valueOf(mGenerator.getCurrentAddress()));
+
         }
 
     }
@@ -104,10 +119,10 @@ public class Parser {
             term();
 
             if(arithmeticOperation.equals("+")) {
-                //TODO generate code
+                mGenerator.emit(Generator.Instruction.ADD);
             }
             else {
-                //TODO generate code
+                mGenerator.emit(Generator.Instruction.SUB);
             }
         }
     }
@@ -127,10 +142,10 @@ public class Parser {
             factor();
 
             if(arithmeticOperation.equals("*")) {
-                //TODO generate code
+                mGenerator.emit(Generator.Instruction.MULT);
             }
             else {
-                //TODO generate code
+                mGenerator.emit(Generator.Instruction.DIV);
             }
         }
     }
@@ -143,19 +158,19 @@ public class Parser {
         if(see(Token.TokenName.T_INT)) {
             int value = mScanner.getToken().getIntVal();
             next();
-            //TODO generate code
+            mGenerator.emit(Generator.Instruction.PUSH, String.valueOf(value));
             //Если встретили число, то преобразуем его в целое и записываем на вершину стека
         }
         else if(see(Token.TokenName.T_VAR)) {
-            //int varAddress = findOrAddVariable(mScanner.getToken().getStringVal());
+            String varAddress = mGenerator.findOrAddVariable(mScanner.getToken().getStringVal());
             next();
-            //TODO generate code
+            mGenerator.emit(Generator.Instruction.LOAD, String.valueOf(varAddress));
             //Если встретили переменную, то выгружаем значение, лежащее по ее адресу, на вершину стека
         }
         else if(see(Token.TokenName.T_ADDOP) && mScanner.getToken().getStringVal().equals("-")) {
             next();
             factor();
-            //TODO generate code
+            mGenerator.emit(Generator.Instruction.INVERT);
             //Если встретили знак "-", и за ним <factor> то инвертируем значение, лежащее на вершине стека
         }
         else if(match(Token.TokenName.T_LPAREN)) {
@@ -179,9 +194,21 @@ public class Parser {
             String cmp = mScanner.getToken().getStringVal();
             next();
             expression();
-            switch (cmp) {
-              //TODO generate code
+
+            if (cmp.equals("==")) {
+                mGenerator.emit(Generator.Instruction.CMP, "0");
+            } else if (cmp.equals("!=")) {
+                mGenerator.emit(Generator.Instruction.CMP, "1");
+            } else if (cmp.equals("<")) {
+                mGenerator.emit(Generator.Instruction.CMP, "2");
+            } else if (cmp.equals(">")) {
+                mGenerator.emit(Generator.Instruction.CMP, "3");
+            } else if (cmp.equals("<=")) {
+                mGenerator.emit(Generator.Instruction.CMP, "4");
+            } else if (cmp.equals(">=")) {
+                mGenerator.emit(Generator.Instruction.CMP, "5");
             }
+
         } else {
             System.out.println("Error on line: "+mScanner.getToken().getLineNumber()+" comparison operator expected.");
             isError = true;

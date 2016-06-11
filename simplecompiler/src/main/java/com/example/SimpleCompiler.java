@@ -19,10 +19,16 @@ public class SimpleCompiler {
         Scanner mScanner = new Scanner();
         mScanner.setInputCodeString(inputCode);
 
-        Parser mParser = new Parser(mScanner);
+        Generator mGenerator = new Generator();
+
+        Parser mParser = new Parser(mScanner, mGenerator);
         System.out.println("Start parsing");
-        mParser.parse();
+        boolean done = mParser.parse();
         System.out.println("End parsing");
+
+        if (done) {
+            System.out.println(mGenerator.getAssemblerCode());
+        }
 
 
     }
